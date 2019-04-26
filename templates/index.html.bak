@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World</title>
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+<div class="col-12 pt-2">
+    <button class="btn btn-primary" onclick="Insert()">insert</button>
+    <button class="btn btn-primary" onclick="Delete()">delete</button>
+    <button class="btn btn-primary" onclick="Update()">update</button>
+    <button class="btn btn-primary" onclick="Select()">select</button>
+    <label for="first">Unit:</label>
+    <input id="first" type="text">
+    <label for="second">UnitName:</label>
+    <input id="second" type="text">
+</div>
+<div class="content"></div>
+<script>
+    function renderContent(data) {
+        var content = $('.content');
+        content.empty();
+        var base = "<table class=\"table table-striped\">\n" +
+            "  <thead>\n" +
+            "    <tr>\n" +
+            "      <th scope=\"col\">ID</th>\n" +
+            "      <th scope=\"col\">Unit</th>\n" +
+            "      <th scope=\"col\">UnitName</th>\n" +
+            "    </tr>\n" +
+            "  </thead>\n" +
+            "  <tbody>" +
+            "</tbody>" +
+            "</table>";
+        content.append(base);
+        var baseContent = "";
+        for (var i = 0, len = data.length; i < len; i++) {
+            baseContent += " <tr>\n" +
+                "      <th scope=\"row\">" + data[i].ID + "</th>\n" +
+                "      <td>" + data[i].Unit + "</td>\n" +
+                "      <td>" + data[i].UnitName + "</td>\n" +
+                "    </tr>"
+        }
+        $("tbody").append(baseContent);
+    }
+
+    function Insert() {
+        var unit = $('#first').val();
+        var unitName = $('#second').val();
+        $.ajax({
+            url: 'insert/',
+            data: {
+                unit: unit,
+                unitName: unitName
+            },
+            type: 'GET',
+            success: function (str) {	//成功回调函数
+                if (str.type === 'success') {
+                    console.log('success insert')
+                }
+            },
+            error: function (err) {	//失败回调函数
+                alert('插入失败');
+            }
+        });
+    }
+
+    function Delete() {
+        var unit = $('#first').val();
+        $.ajax({
+            url: 'delete/',
+            data: {
+                unit: unit,
+            },
+            type: 'GET',
+            success: function (str) {	//成功回调函数
+                if (str.type === 'success') {
+                    console.log('success delete')
+                }
+            },
+            error: function (err) {	//失败回调函数
+                alert('删除失败');
+            }
+        });
+    }
+
+    function Update() {
+        var unit = $('#first').val();
+        var unitName = $('#second').val();
+        $.ajax({
+            url: 'update/',
+            data: {
+                unit: unit,
+                unitName: unitName
+            },
+            type: 'GET',
+            success: function (str) {	//成功回调函数
+                if (str.type === 'success') {
+                    console.log('success insert')
+                }
+            },
+            error: function (err) {	//失败回调函数
+                alert('更新失败');
+            }
+        });
+    }
+
+    function Select() {
+        $.ajax({
+            url: 'select/',
+            data: {},
+            type: 'GET',
+            success: function (str) {	//成功回调函数
+                if (str.type === 'success') {
+                    renderContent(str.content);
+                }
+            },
+            error: function (err) {	//失败回调函数
+                alert('查询失败');
+            }
+        });
+    }
+</script>
+</body>
+</html>
